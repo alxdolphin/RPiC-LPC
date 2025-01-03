@@ -43,10 +43,41 @@ chown -R "$USERNAME:$GROUPNAME" "/home/$USERNAME/.ssh"
 
 # create project directory if specified
 if [ "$PROJECT" != "default" ]; then
-    mkdir -p "/projects/$PROJECT"
-    chown root:"$GROUPNAME" "/projects/$PROJECT"
-    chmod 2775 "/projects/$PROJECT"
-    echo -e "${GREEN}Created project directory /projects/$PROJECT${NC}"
+    echo -e "${BLUE}Creating project structure for: ${GREEN}$PROJECT${NC}"
+    
+    # Create project directory and copy template
+    mkdir -p "/cluster/projects/$PROJECT"
+    
+    # Create structure with colored output
+    echo -e "${GREEN}Creating data directories...${NC}"
+    mkdir -p "/cluster/projects/$PROJECT/data/"{raw,processed}
+    
+    echo -e "${YELLOW}Creating code directories...${NC}"
+    mkdir -p "/cluster/projects/$PROJECT/code/"{bin,src}
+    
+    echo -e "${CYAN}Creating output directory...${NC}"
+    mkdir -p "/cluster/projects/$PROJECT/output"
+    
+    # Create README with color highlights
+    echo -e "${MAGENTA}Generating README...${NC}"
+    cat > "/cluster/projects/$PROJECT/README.md" << EOF
+# Project: $PROJECT
+
+## Structure
+- \`data/\`: Raw and processed data
+- \`code/\`: Scripts and programs
+- \`output/\`: Results
+
+## Contact
+Project owner: $USERNAME
+Created: $(date +%Y-%m-%d)
+EOF
+
+    # Set permissions
+    chown -R root:"$GROUPNAME" "/cluster/projects/$PROJECT"
+    chmod -R 2775 "/cluster/projects/$PROJECT"
+    
+    echo -e "${GREEN}Project structure created successfully!${NC}"
 fi
 
 # set resource limits
