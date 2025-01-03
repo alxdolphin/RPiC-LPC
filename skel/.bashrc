@@ -39,6 +39,7 @@ echo -e "\e[1;33mHostname:\e[0m      $(hostname)"
 echo -e "\e[1;33mSystem Load:\e[0m   $(uptime | awk -F'load average:' '{ print $2 }')"
 echo -e "\e[1;33mMemory Usage:\e[0m  $(free -h | awk '/^Mem:/ {print $3 "/" $2}')"
 echo -e "\e[1;33mCPU Usage:\e[0m     $(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')%"
+echo -e "\e[1;33mCPU Temp:\e[0m      $(rpi-temp)"
 echo "--------------------------------------------------------------------------------"
 
 # shared user warning

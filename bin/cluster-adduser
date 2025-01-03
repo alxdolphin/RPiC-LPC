@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# colors for output
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# exit on any error
+set -e
+
+if [ "$#" -lt 2 ]; then
+    echo -e "${RED}Usage: $0 username groupname [project]${NC}"
+    exit 1
+fi
+
+USERNAME=$1
+GROUPNAME=$2
+PROJECT=${3:-default}
+
+echo -e "${BLUE}Creating user $USERNAME in group $GROUPNAME...${NC}"
+
+# create project group if it doesn't exist
+if ! getent group "$GROUPNAME" > /dev/null; then
+    groupadd "$GROUPNAME"
+    echo -e "${GREEN}Created group $GROUPNAME${NC}"
+fi
+
+# create user
+useradd -m -g "$GROUPNAME" -s /bin/bash "$USERNAME"
+
+# set random initial password
+PASS=$(openssl rand -base64 12)
+echo "$USERNAME:$PASS" | chpasswd
+chage -d 0 "$USERNAME"
+
+# create ssh directory
+mkdir -p "/home/$USERNAME/.ssh"
+touch "/home/$USERNAME/.ssh/authorized_keys"
+chmod 700 "/home/$USERNAME/.ssh"
+chmod 600 "/home/$USERNAME/.ssh/authorized_keys"
+chown -R "$USERNAME:$GROUPNAME" "/home/$USERNAME/.ssh"
+
+# create project directory if specified
+if [ "$PROJECT" != "default" ]; then
+    mkdir -p "/projects/$PROJECT"
+    chown root:"$GROUPNAME" "/projects/$PROJECT"
+    chmod 2775 "/projects/$PROJECT"
+    echo -e "${GREEN}Created project directory /projects/$PROJECT${NC}"
+fi
+
+# set resource limits
+cat >> /etc/security/limits.d/"$USERNAME" << EOF
+$USERNAME soft nproc 1024
+$USERNAME hard nproc 2048
+$USERNAME soft nofile 4096
+$USERNAME hard nofile 8192
+EOF
+
+echo -e "${GREEN}=== User Creation Complete ===${NC}"
+echo -e "${BLUE}Username:${NC} $USERNAME"
+echo -e "${BLUE}Initial password:${NC} $PASS"
+echo -e "${RED}Note: User must change password at first login${NC}"
+echo -e "${BLUE}Useful commands:${NC}"
+echo -e "su - $USERNAME"
+echo -e "qstat"
+echo -e "qinfo"
+echo -e "qdel <jobid>"
+echo -e "qsub <script.sh>"
+echo -e "qsub -I -t 1:00:00 -n 1 -m 1G -q gpu -g gpu -c 'echo \"Hello, World!\"'"

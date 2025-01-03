@@ -1,0 +1,9 @@
+# /etc/fstab
+UUID=04bc0c84-1004-4f50-9867-f18eea6d3870  / ext4    defaults,noatime 0 0
+UUID=7F78-3EC5  /boot vfat    defaults,noatime 0 0
+UUID=add7ae18-95d5-42a5-b45c-9bd9a3dfb566  swap swap    defaults,noatime 0 0
+UUID=b772dfff-1e11-480e-b0bf-f7748fcd6ceb  /cluster/projects  xfs  defaults,noatime,allocsize=64k  0 2
+UUID=e3cd6750-1ec6-4ef7-9224-4cbb76eb8a2a  /cluster/home      xfs  defaults,noatime,allocsize=64k  0 2
+UUID=711f74f4-d94f-4912-80d2-cd952e3d2a8a  /cluster/scratch   xfs  defaults,noatime,allocsize=64k  0 2
+UUID=2c4b3719-1ebc-4998-893c-c038d2e8041a  /cluster/netboot   xfs  defaults,noatime,allocsize=64k  0 2
+UUID=c3335962-fc8a-4c65-8d62-8b4b92894ed3  /cluster/shared    xfs  defaults,noatime,allocsize=64k  0 2

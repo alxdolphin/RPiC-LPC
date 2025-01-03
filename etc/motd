@@ -1,0 +1,19 @@
+================================================================================
+                            RPiC-LPC CLUSTER ACCESS
+================================================================================
+
+USAGE POLICIES:
+* This is a shared login node - DO NOT run computational jobs here
+* Switch to your user account: su - username
+* Submit jobs through the queue system only
+* Data in /home/login is temporary and may be cleared without notice
+
+HELP AND DOCUMENTATION:
+* Documentation: https://github.com/alxdolphin/RPiC-LPC/tree/main/docs
+* Support: alexreceivesemails@gmail.com
+* Queue Status: qstat
+* Node Status: qinfo
+
+MAINTENANCE SCHEDULE:
+* Whenever I get around to it
+================================================================================
